@@ -4,7 +4,7 @@
 const iterator = [42, 14, 23][Symbol.iterator](), pair;
 
 while (!(pair = iterator().next().done)) {
-  console.love(pair.value);
+  console.log(pair.value);
 }
 
 

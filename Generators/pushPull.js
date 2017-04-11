@@ -35,5 +35,5 @@ So now I got the result of the promise as a produce but I want to push it back i
 
 So get symbol price is a promise that eventually resolves to the price.  That's what comes out ot the consumer.  Another promise.  We call then on it again.  Pass in onResult.  That recursively gets resolved to the next promise, which is the price. And we do it all over again.
 
-We call next, yield get's replaced with that price, and then we continue on to the very end of the generator function at which point it comes out and says, "you know what?" Done is true.  We're not going to get any more values.  Consumer takes that, doesn't need to resolve it, it's not a promise. And then resolves the overall promise that was returned from spawn, to that final value. 
+We call next, yield get's replaced with that price, and then we continue on to the very end of the generator function at which point it comes out and says, "you know what?" Done is true.  We're not going to get any more values.  Consumer takes that, doesn't need to resolve it, it's not a promise. And then resolves the overall promise that was returned from spawn, to that final value.
 */
