@@ -943,10 +943,7 @@ function exc24() {
 						return next;
 					}
 				});
-				let moments = video.interestingMoments.reduce((first, next) => {
-					if (next.type === 'Middle') return next;
-					return first;
-				});
+				let moments = video.interestingMoments.filter(({ type }) => type === "Middle");
 				return Array.zip(boxarts, moments, ({ url }, { time }) => ({
 						id: video.id,
 						title: video.title,
@@ -957,27 +954,27 @@ function exc24() {
 			})
 		);
 	//------------ Their Answer --------------
-	return movieLists
-		.concatMap((movieList) => movieList.videos
-			.concatMap((video) =>
-				Array.zip(
-					video.boxarts.reduce((acc,curr) => {
-						if (acc.width * acc.height < curr.width * curr.height) {
-					  	  	return acc;
-						} else {
-					  		return curr;
-						}
-			  	}),
-					video.interestingMoments.filter((interestingMoment) =>
-						interestingMoment.type === "Middle"),
-				  	({ url }, { time }) => ({
-							id: video.id,
-							title: video.title,
-							time,
-							url
-					});
-		  	);
-			);
-		);
+	// return movieLists
+	// 	.concatMap((movieList) => movieList.videos
+	// 		.concatMap((video) =>
+	// 			Array.zip(
+	// 				video.boxarts.reduce((acc,curr) => {
+	// 					if (acc.width * acc.height < curr.width * curr.height) {
+	// 				  	  	return acc;
+	// 					} else {
+	// 				  		return curr;
+	// 					}
+	// 		  	}),
+	// 				video.interestingMoments.filter((interestingMoment) =>
+	// 					interestingMoment.type === "Middle"),
+	// 			  	({ url }, { time }) => ({
+	// 						id: video.id,
+	// 						title: video.title,
+	// 						time,
+	// 						url
+	// 				});
+	// 	  	);
+	// 		);
+	// 	);
 }
 console.log(exc24());
