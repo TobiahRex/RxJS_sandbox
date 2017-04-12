@@ -249,21 +249,21 @@ function exc12() {
 
 	movieLists = movieLists
 	.map((list) =>
-		list.videos
-		.map((video) =>
-			({ id: video.id, title: video.title, boxart: video.boxarts })
-		)
-	)
-	.concatAll()
-	.map((video) => {
-		let newBoxArt = '';
+	list.videos
+	.map((video) =>
+	({ id: video.id, title: video.title, boxart: video.boxarts })
+)
+)
+.concatAll()
+.map((video) => {
+	let newBoxArt = '';
 
-		video.boxart
-		.filter((art) =>  (art.height === 200 && art.width === 150))
-		.map((attr) => { newBoxArt = attr.url; })
+	video.boxart
+	.filter((art) =>  (art.height === 200 && art.width === 150))
+	.map((attr) => { newBoxArt = attr.url; })
 
-		video.boxart = newBoxArt;
-		return video;
+	video.boxart = newBoxArt;
+	return video;
 });
 
 // Use one or more map, concatAll, and filter calls to create an array with the following items
@@ -307,9 +307,9 @@ Array.prototype.concatMap = function(projectionFunctionThatReturnsArray) {
 
 /*
 var spanishFrenchEnglishWords = [
-	["cero","rien","zero"],
-	["uno","un","one"],
-	["dos","deux","two"]
+["cero","rien","zero"],
+["uno","un","one"],
+["dos","deux","two"]
 ];
 // collect all the words for each number, in every language, in a single, flat list
 var allWords = [0,1,2].concatMap((index) => spanishFrenchEnglishWords[index]);
@@ -411,41 +411,41 @@ function exc14() {
 	*/
 
 	return movieLists.concatMap(({ videos }) =>
-		videos.concatMap((video) =>
-			video.boxarts.filter(({ width }) => width === 150)
-			.map((boxart) =>
-				({ id: video.id, title: video.title, boxart: boxart.url })
-			)
-		)
-	);
-	// movieLists = movieLists.concatMap(function(movieList) {
-	//
-	// 	let newMovieList = movieList.videos.concatMap(function(video) {
-	//
-	// 		let newVideo = video.boxarts
-	// 		.filter(function(boxart) {
-	// 			return boxart.width === 150;
-	// 		})
-	// 		.map(function(boxart) {
-	// 			return {id: video.id, title: video.title, boxart: boxart.url};
-	// 		});
-	// 		// console.log('newVideo: ', newVideo);
-	// 		return newVideo
-	// 	});
-	// 	console.log('newMovieList: ', newMovieList);
-	// 	return newMovieList;
-	// });
-	// console.log('movieLists: ', movieLists);
+	videos.concatMap((video) =>
+	video.boxarts.filter(({ width }) => width === 150)
+	.map((boxart) =>
+	({ id: video.id, title: video.title, boxart: boxart.url })
+)
+)
+);
+// movieLists = movieLists.concatMap(function(movieList) {
+//
+// 	let newMovieList = movieList.videos.concatMap(function(video) {
+//
+// 		let newVideo = video.boxarts
+// 		.filter(function(boxart) {
+// 			return boxart.width === 150;
+// 		})
+// 		.map(function(boxart) {
+// 			return {id: video.id, title: video.title, boxart: boxart.url};
+// 		});
+// 		// console.log('newVideo: ', newVideo);
+// 		return newVideo
+// 	});
+// 	console.log('newMovieList: ', newMovieList);
+// 	return newMovieList;
+// });
+// console.log('movieLists: ', movieLists);
 
-	// Use one or more concatMap, map, and filter calls to create an array with the following items
-	// [
-	//	 {"id": 675465, "title": "Fracture", "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
-	//	 {"id": 65432445, "title": "The Chamber", "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber150.jpg" },
-	//	 {"id": 654356453, "title": "Bad Boys", "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys150.jpg" },
-	//	 {"id": 70111470, "title": "Die Hard", "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard150.jpg" }
-	// ];
+// Use one or more concatMap, map, and filter calls to create an array with the following items
+// [
+//	 {"id": 675465, "title": "Fracture", "boxart": "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
+//	 {"id": 65432445, "title": "The Chamber", "boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber150.jpg" },
+//	 {"id": 654356453, "title": "Bad Boys", "boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys150.jpg" },
+//	 {"id": 70111470, "title": "Die Hard", "boxart": "http://cdn-0.nflximg.com/images/2891/DieHard150.jpg" }
+// ];
 
-	return movieLists // Complete this expression!
+return movieLists // Complete this expression!
 
 }
 // console.log(exc14());
@@ -467,14 +467,14 @@ In this example we use forEach to find the largest box art. Each time we examine
 */
 function exc15() {
 	var boxarts = [
-			{ width: 200, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg" },
-			{ width: 150, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
-			{ width: 300, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg" },
-			{ width: 425, height: 150, url: "http://cdn-0.nflximg.com/images/2891/Fracture425.jpg" }
-		],
-		currentSize,
-		maxSize = -1,
-		largestBoxart;
+		{ width: 200, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg" },
+		{ width: 150, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
+		{ width: 300, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg" },
+		{ width: 425, height: 150, url: "http://cdn-0.nflximg.com/images/2891/Fracture425.jpg" }
+	],
+	currentSize,
+	maxSize = -1,
+	largestBoxart;
 
 	boxarts.forEach(({ width, height, url }) => {
 		currentSize = width * height;
@@ -500,7 +500,7 @@ Let's add a reduce() function to the Array type. Like map. Take note this is dif
 
 Array.prototype.reduce = function(combiner, initialValue) {
 	var counter,
-		accumulatedValue;
+	accumulatedValue;
 
 	// If the array is empty, do nothing
 	if (this.length === 0) return this;
@@ -540,8 +540,8 @@ function exc17() {
 
 	// You should return an array containing only the largest rating. Remember that reduce always
 	// returns an array with one item.
-  return ratings
-    .reduce((acc, value) => acc > value ? acc : value);
+	return ratings
+	.reduce((acc, value) => acc > value ? acc : value);
 }
 // console.log(exc17());
 // -----------------------------------------------------------------------------
@@ -554,16 +554,16 @@ Let's try combining reduce() with map() to reduce multiple boxart objects to a s
 */
 function exc18() {
 	var boxarts = [
-			{ width: 200, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg" },
-			{ width: 150, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
-			{ width: 300, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg" },
-			{ width: 425, height: 150, url: "http://cdn-0.nflximg.com/images/2891/Fracture425.jpg" }
-		];
+		{ width: 200, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture200.jpg" },
+		{ width: 150, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture150.jpg" },
+		{ width: 300, height: 200, url: "http://cdn-0.nflximg.com/images/2891/Fracture300.jpg" },
+		{ width: 425, height: 150, url: "http://cdn-0.nflximg.com/images/2891/Fracture425.jpg" }
+	];
 
 	// You should return an array containing only the URL of the largest box art. Remember that reduce always returns an array with one item.
 	return boxarts
 	.reduce((acc, value) =>
-		(acc.width * acc.height) > (value.width * value.height) ? acc : value)
+	(acc.width * acc.height) > (value.width * value.height) ? acc : value)
 	.map(({ url }) => url);
 }
 // console.log(exc18());
@@ -613,10 +613,10 @@ function exc19() {
 		// the object listed in its second argument (obj) and assigns them
 		// to the object listed in its first argument (accumulatedMap).
 		return Object.assign(accumulatedMap, obj);
-		},
-		// Use an empty map as the initial value instead of the first item in
-		// the list.
-		{});
+	},
+	// Use an empty map as the initial value instead of the first item in
+	// the list.
+	{});
 }
 // console.log(exc19());
 // -----------------------------------------------------------------------------
@@ -698,16 +698,16 @@ function exc20() {
 
 	//[{ videos: [{ boxarts: [{ url, width, height }] }] }, { videos: [] }]
 	return movieLists.concatMap((movieList) =>
-		movieList.videos.concatMap((video) =>
-	 		video.boxarts.reduce((first, boxart) => {
-				if ((boxart.width * boxart.height) < (first.width * first.height)) {
-					return boxart;
-				}
-				return first;
-			})
-			.map(({ url }) => ({ id: video.id, title: video.title, boxart: url }))
-		)
-	)
+	movieList.videos.concatMap((video) =>
+	video.boxarts.reduce((first, boxart) => {
+		if ((boxart.width * boxart.height) < (first.width * first.height)) {
+			return boxart;
+		}
+		return first;
+	})
+	.map(({ url }) => ({ id: video.id, title: video.title, boxart: url }))
+)
+)
 }
 // console.log(exc20());
 // -----------------------------------------------------------------------------
@@ -721,40 +721,40 @@ Use a for loop to traverse the videos and bookmarks array at the same time. For 
 */
 function exc21() {
 	var videos = [
-			{
-				"id": 70111470,
-				"title": "Die Hard",
-				"boxart": "http://cdn-0.nflximg.com/images/2891/DieHard.jpg",
-				"uri": "http://api.netflix.com/catalog/titles/movies/70111470",
-				"rating": 4.0,
-			},
-			{
-				"id": 654356453,
-				"title": "Bad Boys",
-				"boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys.jpg",
-				"uri": "http://api.netflix.com/catalog/titles/movies/70111470",
-				"rating": 5.0,
-			},
-			{
-				"id": 65432445,
-				"title": "The Chamber",
-				"boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber.jpg",
-				"uri": "http://api.netflix.com/catalog/titles/movies/70111470",
-				"rating": 4.0,
-			},
-			{
-				"id": 675465,
-				"title": "Fracture",
-				"boxart": "http://cdn-0.nflximg.com/images/2891/Fracture.jpg",
-				"uri": "http://api.netflix.com/catalog/titles/movies/70111470",
-				"rating": 5.0,
-			}
-		],
-		bookmarks = [
-			{id: 470, time: 23432},
-			{id: 453, time: 234324},
-			{id: 445, time: 987834}
-		],
+		{
+			"id": 70111470,
+			"title": "Die Hard",
+			"boxart": "http://cdn-0.nflximg.com/images/2891/DieHard.jpg",
+			"uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+			"rating": 4.0,
+		},
+		{
+			"id": 654356453,
+			"title": "Bad Boys",
+			"boxart": "http://cdn-0.nflximg.com/images/2891/BadBoys.jpg",
+			"uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+			"rating": 5.0,
+		},
+		{
+			"id": 65432445,
+			"title": "The Chamber",
+			"boxart": "http://cdn-0.nflximg.com/images/2891/TheChamber.jpg",
+			"uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+			"rating": 4.0,
+		},
+		{
+			"id": 675465,
+			"title": "Fracture",
+			"boxart": "http://cdn-0.nflximg.com/images/2891/Fracture.jpg",
+			"uri": "http://api.netflix.com/catalog/titles/movies/70111470",
+			"rating": 5.0,
+		}
+	],
+	bookmarks = [
+		{id: 470, time: 23432},
+		{id: 453, time: 234324},
+		{id: 445, time: 987834}
+	],
 	counter,
 	videoIdAndBookmarkIdPairs = [];
 
@@ -762,12 +762,37 @@ function exc21() {
 		counter = 0;
 		counter < Math.min(videos.length, bookmarks.length);
 		counter++) {
-		videoIdAndBookmarkIdPairs[counter] = {
-			videoId: videos[counter].id,
-			bookmarkId: bookmarks[counter].id
+			videoIdAndBookmarkIdPairs[counter] = {
+				videoId: videos[counter].id,
+				bookmarkId: bookmarks[counter].id
+			}
 		}
-	}
 
-	return videoIdAndBookmarkIdPairs;
-}
-console.log(exc21());
+		return videoIdAndBookmarkIdPairs;
+	}
+	// console.log(exc21());
+	// -----------------------------------------------------------------------------
+	/*
+	Exercise 22: Implement zip
+
+	Let's add a static zip() function to the Array type. The zip function accepts a combiner function, traverses each array at the same time, and calls the combiner function on the current item on the left-hand-side and right-hand-side. The zip function requires an item from each array in order to call the combiner function, therefore the array returned by zip will only be as large as the smallest input array.
+	*/
+	Array.zip = (left, right, combinerFunction) => {
+		let counter;
+		let results = [];
+
+		for (
+			counter = 0;
+			counter < Math.min(left.length, right.length);
+			counter++
+		) {
+			results[counter] = combinerFunction(left[counter], right[counter]);
+		}
+		return results;
+	}
+console.log('exc22: \n', Array.zip([1,2,3],[4,5,6], (left, right) => (left + right)))
+/* Output
+exc22:
+ [ 5, 7, 9 ]
+*/
+// -----------------------------------------------------------------------------
