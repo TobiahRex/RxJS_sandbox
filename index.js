@@ -790,19 +790,19 @@ function exc21() {
 		}
 		return results;
 	}
-// console.log('exc22: \n', Array.zip([1,2,3],[4,5,6], (left, right) => (left + right)))
-/* Output
-exc22:
- [ 5, 7, 9 ]
-*/
-// -----------------------------------------------------------------------------
-/*
-Exercise 23: Combine videos and bookmarks by index
+	// console.log('exc22: \n', Array.zip([1,2,3],[4,5,6], (left, right) => (left + right)))
+	/* Output
+	exc22:
+	[ 5, 7, 9 ]
+	*/
+	// -----------------------------------------------------------------------------
+	/*
+	Exercise 23: Combine videos and bookmarks by index
 
-Let's repeat exercise 21, but this time lets use your new zip() function. For each video and bookmark pair, create a {videoId, bookmarkId} pair.
-*/
-function exc23() {
-	var videos = [
+	Let's repeat exercise 21, but this time lets use your new zip() function. For each video and bookmark pair, create a {videoId, bookmarkId} pair.
+	*/
+	function exc23() {
+		var videos = [
 			{
 				"id": 70111470,
 				"title": "Die Hard",
@@ -838,24 +838,24 @@ function exc23() {
 			{id: 445, time: 987834}
 		];
 
-	return Array.zip(videos, bookmarks, (video, bookmark) =>
+		return Array.zip(videos, bookmarks, (video, bookmark) =>
 		({ videoId: video.id, bookmarkId: bookmark.id }))
-}
-// console.log(exc23());
-// -----------------------------------------------------------------------------
-/*
-Exercise 24: Retrieve each video's 1) id, 2)title, 3)middle interesting moment time, and 4) smallest box art url.
+	}
+	// console.log(exc23());
+	// -----------------------------------------------------------------------------
+	/*
+	Exercise 24: Retrieve each video's 1) id, 2)title, 3)middle interesting moment time, and 4) smallest box art url.
 
-This is a variation of the problem we solved earlier.
+	This is a variation of the problem we solved earlier.
 
-This time each video has an interesting moments collection, each representing a time during which a screenshot is interesting or representative of the title as a whole.
+	This time each video has an interesting moments collection, each representing a time during which a screenshot is interesting or representative of the title as a whole.
 
-Notice that both the boxarts and interestingMoments arrays are located at the same depth in the tree. Meaning, use zip here!
+	Notice that both the boxarts and interestingMoments arrays are located at the same depth in the tree. Meaning, use zip here!
 
-Retrieve the time of the middle interesting moment and the smallest box art url simultaneously with zip(). Return an {id, title, time, url} object for each video.
-*/
-function exc24() {
-	var movieLists = [
+	Retrieve the time of the middle interesting moment and the smallest box art url simultaneously with zip(). Return an {id, title, time, url} object for each video.
+	*/
+	function exc24() {
+		var movieLists = [
 			{
 				name: "New Releases",
 				videos: [
@@ -930,51 +930,125 @@ function exc24() {
 			}
 		];
 
-	//------------ COMPLETE THIS EXPRESSION --------------
-	//------------ My Answer --------------
-	return movieLists
+		//------------ COMPLETE THIS EXPRESSION --------------
+		//------------ My Answer --------------
+		return movieLists
 		.concatMap((movieList) =>
-			movieList.videos
-			.concatMap((video) => {
-				let boxarts = video.boxarts.reduce((first, next) => {
-					if((first.width * first.height) < (next.width * next.height)) {
-						return first;
-					} else {
-						return next;
-					}
-				});
-				let moments = video.interestingMoments.filter(({ type }) => type === "Middle");
-				return Array.zip(boxarts, moments, ({ url }, { time }) => ({
-						id: video.id,
-						title: video.title,
-						time,
-						url,
-					})
-				);
+		movieList.videos
+		.concatMap((video) => {
+			let boxarts = video.boxarts.reduce((first, next) => {
+				if((first.width * first.height) < (next.width * next.height)) {
+					return first;
+				} else {
+					return next;
+				}
+			});
+			let moments = video.interestingMoments.filter(({ type }) => type === "Middle");
+			return Array.zip(boxarts, moments, ({ url }, { time }) => ({
+				id: video.id,
+				title: video.title,
+				time,
+				url,
 			})
 		);
-	//------------ Their Answer --------------
-	// return movieLists
-	// 	.concatMap((movieList) => movieList.videos
-	// 		.concatMap((video) =>
-	// 			Array.zip(
-	// 				video.boxarts.reduce((acc,curr) => {
-	// 					if (acc.width * acc.height < curr.width * curr.height) {
-	// 				  	  	return acc;
-	// 					} else {
-	// 				  		return curr;
-	// 					}
-	// 		  	}),
-	// 				video.interestingMoments.filter((interestingMoment) =>
-	// 					interestingMoment.type === "Middle"),
-	// 			  	({ url }, { time }) => ({
-	// 						id: video.id,
-	// 						title: video.title,
-	// 						time,
-	// 						url
-	// 				});
-	// 	  	);
-	// 		);
-	// 	);
+	})
+);
+//------------ Their Answer --------------
+// return movieLists
+// 	.concatMap((movieList) => movieList.videos
+// 		.concatMap((video) =>
+// 			Array.zip(
+// 				video.boxarts.reduce((acc,curr) => {
+// 					if (acc.width * acc.height < curr.width * curr.height) {
+// 				  	  	return acc;
+// 					} else {
+// 				  		return curr;
+// 					}
+// 		  	}),
+// 				video.interestingMoments.filter((interestingMoment) =>
+// 					interestingMoment.type === "Middle"),
+// 			  	({ url }, { time }) => ({
+// 						id: video.id,
+// 						title: video.title,
+// 						time,
+// 						url
+// 				});
+// 	  	);
+// 		);
+// 	);
 }
-console.log(exc24());
+// console.log(exc24());
+// -----------------------------------------------------------------------------
+/*
+Powerful Queries
+Now that we've learned the five operators let's flex our muscles and write some powerful queries.
+
+Exercise 25: Converting from Arrays to Trees
+
+When information is organized in a tree like a JSON expression, relationships point from parent to child. In relational systems like databases, relationships point from children to their parents. Both ways of organizing information are equivalent, and depending on the circumstances, we might get data organized in one way or another. It may surprise you to learn that you can use the 5 query functions you already know to easily convert between these representations. In other words, not only can you query arrays from trees, you can query trees from arrays.
+
+We have 2 arrays each containing lists, and videos respectively. Each video has a listId field indicating its parent list. We want to build an array of list objects, each with a name and a videos array. The videos array will contain the video's id and title. In other words we want to build the following structure:
+
+
+*/
+function exc25() {
+	var lists = [
+		{
+			"id": 5434364,
+			"name": "New Releases"
+		},
+		{
+			"id": 65456475,
+			"name": "Thrillers"
+		}
+	],
+	videos = [
+		{
+			"listId": 5434364,
+			"id": 65432445,
+			"title": "The Chamber"
+		},
+		{
+			"listId": 5434364,
+			"id": 675465,
+			"title": "Fracture"
+		},
+		{
+			"listId": 65456475,
+			"id": 70111470,
+			"title": "Die Hard"
+		},
+		{
+			"listId": 65456475,
+			"id": 654356453,
+			"title": "Bad Boys"
+		}
+	];
+	// My Answer
+	return lists.map((list) => {
+		list.videos = videos.filter((video) => {
+			if (video.listId !== list.id) return false;
+			delete video.listId;
+			return true;
+		});
+		delete list.id;
+		return list;
+	});
+
+	// Their Answer
+	// 1) Whenever you see that you're potentially deleting a property on every object, consider using a map and only returning keys that you desire.
+	return lists.map(({ name, id }) => ({
+			name,
+			videos: videos
+			.filter(({ listId }) => listId === id)
+			.map(({ id, title }) => ({ id, title }))
+		})
+	);
+}
+// console.log(exc25());
+// -----------------------------------------------------------------------------
+Looks like you figured out that you can use map and filter to join two different arrays by a key. Now let's try a more complex example...
+
+Exercise 26: Converting from Arrays to Deeper Trees
+
+Let's try creating a deeper tree structure. This time we have 4 separate arrays each containing lists, videos, boxarts, and bookmarks respectively. Each object has a parent id, indicating its parent. We want to build an array of list objects, each with a name and a videos array. The videos array will contain the video's id, title, bookmark time, and smallest boxart url. In other words we want to build the following structure:
