@@ -53,9 +53,9 @@ Array.zip([1,2],[3,4,5], sumFunction)                           === [4,6]
 Observable.zip(seq([1,,,2]),seq([3,,,4,,,5]), sumFunction)      === seq([4,,,6])
 
 // take()
-[1,2,3].take(2)                                                 === [1, 2]
-seq([ 1,,,2,,,3 ]).take(2)                                      === seq([ 1,,,2 ])
-seq([ 1,,,2,,,3,,, ]).take(2)                                   === seq([ 1,,,2 ])
+[1,2,3].take(2)                                               === [1, 2]
+seq([ 1,,,2,,,3 ]).take(2)                                    === seq([ 1,,,2 ])
+seq([ 1,,,2,,,3,,, ]).take(2)                                 === seq([ 1,,,2])
 
 // takeUntil()
 
@@ -63,5 +63,4 @@ seq([ 1,,,2,,,3,,, ]).take(2)                                   === seq([ 1,,,2 
 // because the result will always be an empty array.
 [1,2,3].takeUntil([1])                                          === []
 
-seq([1,,,2,,,3,,, ]).takeUntil(
-seq([ ,,, ,,4 , ]))                                             === seq([ 1,,,2 ])
+seq([1,,,2,,,3,,, ]).takeUntil(seq([ ,,, ,,4 ,]))            === seq([ 1,,,2 ])
