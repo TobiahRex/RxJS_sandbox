@@ -1577,3 +1577,47 @@ function exc38(clicks, saveData, name) {
 				.throttleTime(1000)
 				.concatMap(() => saveData(name))
 }
+//-----------------------------------------------------------------------------
+/*
+Exercise 39: Autocomplete Box
+
+One of the most common problems in web development is the autocomplete box. This seems like it should be an easy problem, but is actually quite challenging. For example, how do we throttle the input? How do we make sure we're not getting out of order requests coming back? For example if I type "react" then type "reactive" I want "reactive" to be my result, regardless of which actually returned first from the service.
+
+In the example below, you will be receiving a sequence of key presses, a textbox, and a function when called returns an array of search results.
+
+```js
+getSearchResultSet('react') ===
+
+seq[,,,["reactive", "reaction","reactor"]]
+keyPresses === seq['r',,,,,'e',,,,,,'a',,,,'c',,,,'t',,,,,]
+
+```
+*/
+function exc39(getSearchResultSet, keyPresses, textBox) {
+	// TODO: Ensure that we only trigger a maximum of one search request per second
+	// TODO: Ensure this sequence ends as soon as another key press arrives
+
+	var getSearchResultSets =
+	keyPresses
+		.map(() => textBox.value)
+		.throttleTime(1000)
+		.concatMap((text) =>
+			getSearchResultSet(text)
+			.takeUntil(keyPresses));
+
+	return getSearchResultSets;
+}
+/* Conclusion
+Now that we're able to query with our throttled input, you'll still notice one slight problem. If you hit your arrow keys or any other non character key, the request will still fire. How do we prevent that?
+*/
+//-----------------------------------------------------------------------------
+/*
+Exercise 40: Distinct Until Changed Input
+
+You'll notice in the previous exercise that if you pressed your arrow keys while inside the textbox, the query will still fire, regardless of whether the text actually changed or not. How do we prevent that? The distinctUntilChanged filters out successive repetitive values.
+
+```js
+seq([1,,,1,,,3,,,3,,,5,,,1,,,]).distinctUntilChanged() ===
+seq([1,,,,,,,3,,,,,,,5,,,1,,,]);
+```
+*/
