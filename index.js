@@ -1151,24 +1151,24 @@ function exc26() {
 		videos: videos
 		.filter(({ listId }) => listId === id)
 		.concatMap((video) =>
-			Array.zip(
-				bookmarks
-				.filter(({ videoId }) => videoId === video.id),
+		Array.zip(
+			bookmarks
+			.filter(({ videoId }) => videoId === video.id),
 
-				boxarts
-				.filter(({ videoId }) => videoId === video.id)
-				.reduce((first, next) => {
-					if ((first.width * first.height) <  (next.width * next.height)) return first.url;
-					return next.url;
-				}), ({ time }, url) => ({
-					id: video.id,
-					title: video.title,
-					time,
-					boxart: url,
-				})
-			)
+			boxarts
+			.filter(({ videoId }) => videoId === video.id)
+			.reduce((first, next) => {
+				if ((first.width * first.height) <  (next.width * next.height)) return first.url;
+				return next.url;
+			}), ({ time }, url) => ({
+				id: video.id,
+				title: video.title,
+				time,
+				boxart: url,
+			})
 		)
-	}))
+	)
+}))
 }
 // console.log('excercise 26: \n', JSON.stringify(exc26(), 0, 2));
 // -----------------------------------------------------------------------------
@@ -1182,31 +1182,31 @@ Let's try an easier question. Let's say we have a collection of all of the price
 // The pricesNASDAQ collection looks something like this...
 
 var pricesNASDAQ = [
-	// ... from the NASDAQ's opening day
-	{name: "ANGI", price: 31.22, timeStamp: new Date(2011,11,15) },
-	{name: "MSFT", price: 32.32, timeStamp: new Date(2011,11,15) },
-	{name: "GOOG", price: 150.43, timeStamp: new Date(2011,11,15)},
-	{name: "ANGI", price: 28.44, timeStamp: new Date(2011,11,16)},
-	{name: "GOOG", price: 199.33, timeStamp: new Date(2011,11,16)},
-	// ...and up to the present.
+// ... from the NASDAQ's opening day
+{name: "ANGI", price: 31.22, timeStamp: new Date(2011,11,15) },
+{name: "MSFT", price: 32.32, timeStamp: new Date(2011,11,15) },
+{name: "GOOG", price: 150.43, timeStamp: new Date(2011,11,15)},
+{name: "ANGI", price: 28.44, timeStamp: new Date(2011,11,16)},
+{name: "GOOG", price: 199.33, timeStamp: new Date(2011,11,16)},
+// ...and up to the present.
 ];
 
 */
 function exc27(pricesNASDAQ, printRecord) {
 	var microsoftPrices,
-		now = new Date(),
-		tenDaysAgo = new Date( now.getFullYear(), now.getMonth(), now.getDate() - 10);
+	now = new Date(),
+	tenDaysAgo = new Date( now.getFullYear(), now.getMonth(), now.getDate() - 10);
 
 	// use filter() to filter the trades for MSFT prices recorded any time after 10 days ago
 	microsoftPrices =
-		pricesNASDAQ.filter((priceRecord) => {
-			if (priceRecord.name === "MSFT") {
-				if (priceRecord.timeStamp.valueOf() >= tenDaysAgo) return priceRecord;
-			}
-		}) // finish this expression
+	pricesNASDAQ.filter((priceRecord) => {
+		if (priceRecord.name === "MSFT") {
+			if (priceRecord.timeStamp.valueOf() >= tenDaysAgo) return priceRecord;
+		}
+	}) // finish this expression
 	// Print the trades to the output console
 	microsoftPrices.forEach(function(priceRecord) {
-			printRecord(priceRecord);
+		printRecord(priceRecord);
 	});
 }
 //-----------------------------------------------------------------------------
@@ -1218,13 +1218,13 @@ Remember the exercise we solved earlier? The one in which we retrieved all the m
 "For every movie list, retrieve only those videos with a rating of 5.0"
 
 var moviesWithHighRatings =
-	movieLists.
-		concatMap(function(movieList) {
-			return movieList.videos.
-				filter(function(video) {
-					return video.rating === 5.0;
-				});
-		});
+movieLists.
+concatMap(function(movieList) {
+return movieList.videos.
+filter(function(video) {
+return video.rating === 5.0;
+});
+});
 
 Now we're going to create a mouseDrag event for a DOM object. If we were to describe this problem as pseudocode it might read something like this...
 
@@ -1241,19 +1241,19 @@ function exc32(sprite, spriteContainer) {
 	.fromEvent(spriteContainer, "mouseup"),
 
 	const spriteMouseDrags =
-			// For every mouse down event on the sprite...
-			spriteMouseDowns.concatMap((contactPoint) => {
-				// ...retrieve all the mouse move events on the sprite container...
-				return spriteContainerMouseMoves
-				// ...until a mouse up event occurs.
-				.takeUntil(spriteContainerMouseUps)
-			})
-				// --------------------------------------------------------
-				//					  INSERT CODE HERE
-				// --------------------------------------------------------
-				// Complete this expression...
-				// For every mouse down event, return the mouse move event
-				// sequence until a mouse up event occurs.
+	// For every mouse down event on the sprite...
+	spriteMouseDowns.concatMap((contactPoint) => {
+		// ...retrieve all the mouse move events on the sprite container...
+		return spriteContainerMouseMoves
+		// ...until a mouse up event occurs.
+		.takeUntil(spriteContainerMouseUps)
+	})
+	// --------------------------------------------------------
+	//					  INSERT CODE HERE
+	// --------------------------------------------------------
+	// Complete this expression...
+	// For every mouse down event, return the mouse move event
+	// sequence until a mouse up event occurs.
 
 	// For each mouse drag event, move the sprite to the absolute page position.
 	spriteMouseDrags.forEach((dragPoint) => {
@@ -1270,7 +1270,7 @@ Our mouse drag event is a little too simple. Notice that when we drag around the
 Let's see if you can adjust the coordinates in the mouse drag event, based on the mousedown location on the sprite. The mouse events are sequences, and they look something like this:
 
 spriteContainerMouseMoves =
-	seq([ {x: 200, y: 400, layerX: 10, layerY: 15},,,{x: 210, y: 410, layerX: 20, layerY: 26},,, ])
+seq([ {x: 200, y: 400, layerX: 10, layerY: 15},,,{x: 210, y: 410, layerX: 20, layerY: 26},,, ])
 
 Each item in the mouse event sequences contains an x, y value that represents that absolute location of the mouse event on the page. The moveSprite() function uses these coordinates to position the sprite. Each item in the sequence also contains a pair of layerX and layerY properties that indicate the position of the mouse event relative to the event target.
 */
@@ -1278,33 +1278,33 @@ function exc33(sprite, spriteContainer) {
 	// All of the mouse event sequences look like this:
 	// seq([ {pageX: 22, pageY: 3423, layerX: 14, layerY: 22} ,,, ])
 	var spriteMouseDowns = Observable.fromEvent(sprite, "mousedown"),
-		spriteContainerMouseMoves = Observable.fromEvent(spriteContainer, "mousemove"),
-		spriteContainerMouseUps = Observable.fromEvent(spriteContainer, "mouseup"),
-		// Create a sequence that looks like this:
-		// seq([ {pageX: 22, pageY:4080 },,,{pageX: 24, pageY: 4082},,, ])
-		spriteMouseDrags =
-			// For every mouse down event on the sprite...
-			spriteMouseDowns.
-				concatMap((contactPoint) => {
-					// ...retrieve all the mouse move events on the sprite container...
-					return spriteContainerMouseMoves.
-						// ...until a mouse up event occurs.
-						takeUntil(spriteContainerMouseUps).
-						// ------------   INSERT CODE HERE  -----------------
-						// Project each mouse move object into a new object
-						// with adjusted pageX and pageY properties.
-						// Translate each page coordinate based on the value
-						// of the layerX and layerY properties in the
-						// contactPoint.
-						map(({ pageX, pageY }) => {
-							return ({
-								pageX: pageX - contactPoint.layerX,
-								pageY: pageY - contactPoint.layerY,
-							})
-						})
-						// -------------------------------------------------
-						// Complete expression...
-				});
+	spriteContainerMouseMoves = Observable.fromEvent(spriteContainer, "mousemove"),
+	spriteContainerMouseUps = Observable.fromEvent(spriteContainer, "mouseup"),
+	// Create a sequence that looks like this:
+	// seq([ {pageX: 22, pageY:4080 },,,{pageX: 24, pageY: 4082},,, ])
+	spriteMouseDrags =
+	// For every mouse down event on the sprite...
+	spriteMouseDowns.
+	concatMap((contactPoint) => {
+		// ...retrieve all the mouse move events on the sprite container...
+		return spriteContainerMouseMoves.
+		// ...until a mouse up event occurs.
+		takeUntil(spriteContainerMouseUps).
+		// ------------   INSERT CODE HERE  -----------------
+		// Project each mouse move object into a new object
+		// with adjusted pageX and pageY properties.
+		// Translate each page coordinate based on the value
+		// of the layerX and layerY properties in the
+		// contactPoint.
+		map(({ pageX, pageY }) => {
+			return ({
+				pageX: pageX - contactPoint.layerX,
+				pageY: pageY - contactPoint.layerY,
+			})
+		})
+		// -------------------------------------------------
+		// Complete expression...
+	});
 
 	// For each mouse drag event, move the sprite to the absolute page position.
 	spriteMouseDrags.forEach((dragPoint) => {
@@ -1312,3 +1312,111 @@ function exc33(sprite, spriteContainer) {
 		sprite.style.top = dragPoint.pageY + "px";
 	});
 }
+//-----------------------------------------------------------------------------
+/*
+Exercise 35: Sequencing HTTP requests with callbacks
+
+Let's say that we're writing the startup flow for a web application. On startup, the application must perform the following operations:
+
+1. Download the URL prefix to use for all subsequent AJAX calls. This URL prefix will vary based on what AB test the user is enrolled in.
+
+2. Use the url prefix to do the following actions in parallel:
+- Retrieve a movie list array
+- Retrieve configuration information and...
+* make a follow up call for an instant queue list if the config property "showInstantQueue" is truthy
+3. If an instant queue list was retrieved, append it to the end of movie list.
+4. If all operations were successful then display the movie lists after the window loads. Otherwise inform the user that there was a connectivity error.
+*/
+function exc35(window, $, showMovieLists, showError) {
+	var error,
+	configDone,
+	movieLists,
+	queueList,
+	windowLoaded,
+	outputDisplayed,
+	errorHandler = () => {
+		// Otherwise show the error.
+		error = "There was a connectivity error";
+
+		// We may be ready to display out
+		tryToDisplayOutput();
+	},
+	tryToDisplayOutput = () => {
+		if (outputDisplayed) return;
+		if (windowLoaded) {
+			if (configDone && movieLists !== undefined) {
+				if (queueList !== undefined) {
+					movieLists.push(queueList);
+				}
+				outputDisplayed = true;
+				showMovieLists(JSON.stringify(movieLists));
+			} else if (error) {
+				outputDisplayed = true;
+				showError(error);
+			}
+		}
+	},
+	windowLoadHandler = () => {
+		windowLoaded = true;
+
+		// Remember to unsubscribe from events
+		window.removeEventListener("load", windowLoadHandler);
+
+		// This may be the last task we're waiting on, so try and display output.
+		tryToDisplayOutput();
+	};
+
+	// Register for the load event
+	window.addEventListener("load", windowLoadHandler);
+
+	// Request the service url prefix for the users AB test
+	$.getJSON(
+		"http://api-global.netflix.com/abTestInformation",
+		{
+			success: (abTestInformation) => {
+				// Request the member's config information to determine whether their instant
+				// queue should be displayed.
+				$.getJSON(`http://api-global.netflix.com/${abTestInformation.urlPrefix}/config`, {
+					success: (config) => {
+						// Parallel retrieval of movie list could've failed,
+						// in which case we don't want to issue this call.
+						if (!error) {
+							// If we're supposed to
+							if (config.showInstantQueue) {
+								$.getJSON(`http://api-global.netflix.com/${abTestInformation.urlPrefix}/queue`, {
+										success: (queueMessage) => {
+											queueList = queueMessage.list;
+
+											configDone = true;
+											tryToDisplayOutput();
+										},
+										error: errorHandler
+									});
+								} else {
+									configDone = true;
+									tryToDisplayOutput();
+								}
+							}
+						},
+						error: errorHandler
+					}
+				);
+				// Retrieve the movie list
+				$.getJSON(`http://api-global.netflix.com/${abTestInformation.urlPrefix}/movieLists`, {
+					success: (movieListMessage) => {
+						movieLists = movieListMessage.list;
+						tryToDisplayOutput();
+					},
+					error: errorHandler
+				});
+			},
+			error: errorHandler
+		});
+	}
+/* Conclusion:
+It's fair to say that sequencing HTTP requests with callbacks is very hard. In order to perform two tasks in parallel, we have to introduce a variable to track the status of each task. Every time one of the parallel tasks completes it must check whether its sibling task has also completed. If both have completed, only then can we move forward. In the example above, every time a task is finished the tryToDisplayOutput() function is called to check if the program was ready to display output. This function checks the status of all tasks and displays the output if possible.
+
+With a callback-based API, asynchronous error handling is also very complicated. In synchronous programs, a unit of work is cancelled when an exception is thrown. By contrast, in our program we had to explicitly track whether an error occurred in parallel to prevent an unnecessary call for the instant queue. Javascript provides us with special support for synchronous error handling with the keywords try/catch/throw. Unfortunately no such support is available for asynchronous programs.
+
+The Observable interface is a much more powerful way of working with asynchronous APIs than callbacks. We'll see that Observables can free us from having to track the status of tasks that are run in parallel, just as Observables free us from having to track Event Subscriptions. We'll also see that Observable gives us the same error propagation semantics in asynchronous programs that we expect in synchronous programs. Finally we'll learn that by converting callback-based APIs to Observables, we can query them along with Events to build much more expressive programs.
+*/

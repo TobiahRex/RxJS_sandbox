@@ -6,22 +6,20 @@ function * getStockPrice(name) {
 
 function spawn(generator) {  // { value: 'NFX', done: false }
   return new Promise(resolve, reject) {
-
     function onResult(lastResult) {
       const { value, done } = generator.next(lastResult);
 
       if (!done) {
-        value.then(onResult, reject);
+        value.then(result => onResult(result), reject);
       } else {
         resolve(value);
       }
     }
     onResult();
-
   }
 }
 
-spawn(getStockPrice('Netflix')).then(console.log);
+spawn(getStockPrice('Netflix')).then(price => console.log(price));
 /*
 Here I have "getStockPrice", and then I have this spawn function which consumes it.  So, notice at the bottom I'm calling spawn, but I'm passing in the generator that comes out of getStockPrice into spawn.  And what's going to come out of that is a promise that's eventually going to resolve to the final price of that stock.
 
