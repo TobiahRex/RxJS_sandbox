@@ -1574,8 +1574,8 @@ seq([1,2,3,,,,,,,4,5,6,,,]).throttleTime(1000 ms) === seq([,,,,,,,3,,,,,,,,,,6,,
 */
 function exc38(clicks, saveData, name) {
 	return clicks
-				.throttleTime(1000)
-				.concatMap(() => saveData(name))
+	.throttleTime(1000)
+	.concatMap(() => saveData(name))
 }
 //-----------------------------------------------------------------------------
 /*
@@ -1599,11 +1599,11 @@ function exc39(getSearchResultSet, keyPresses, textBox) {
 
 	var getSearchResultSets =
 	keyPresses
-		.map(() => textBox.value)
-		.throttleTime(1000)
-		.concatMap((text) =>
-			getSearchResultSet(text)
-			.takeUntil(keyPresses));
+	.map(() => textBox.value)
+	.throttleTime(1000)
+	.concatMap((text) =>
+	getSearchResultSet(text)
+	.takeUntil(keyPresses));
 
 	return getSearchResultSets;
 }
@@ -1621,3 +1621,34 @@ seq([1,,,1,,,3,,,3,,,5,,,1,,,]).distinctUntilChanged() ===
 seq([1,,,,,,,3,,,,,,,5,,,1,,,]);
 ```
 */
+function exc40(keyPresses, isAlpha) {
+	return keyPresses
+	.map((e) => String.fromCharCode(e.keyCode))
+	// Ensure we only have alphabetic characters
+	.filter((character) => isAlpha(character))
+	// TODO: Filter out successive repetitive keys
+	.distinctUntilChanged()
+	// Building up a string of all the characters typed.
+	.scan((stringSoFar, character) => stringSoFar + character, '');
+}
+//-----------------------------------------------------------------------------
+/*
+Exercise 41: Autocomplete Box Part 2: Electric Boogaloo
+
+In the previous version of the autocomplete box, there were two bugs
+
+Multiple successive searches are made for the same string
+Attempts are made to retrieve results for an empty string.
+The example below is the same as above, but this time, fix the bugs!
+*/
+function exc41(getSearchResultSet, keyPresses, textBox) {
+
+	var getSearchResultSets =
+		keyPresses
+		.map(() => textBox.value)
+		.throttleTime(1000)
+		.distinctUntilChanged()
+		.filter((s) => s.length > 0)
+		.concatMap((text) => getSearchResultSet(text).takeUntil(keyPresses));
+	return getSearchResultSets;
+}
