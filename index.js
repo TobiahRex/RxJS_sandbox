@@ -1384,35 +1384,35 @@ function exc35(window, $, showMovieLists, showError) {
 							// If we're supposed to
 							if (config.showInstantQueue) {
 								$.getJSON(`http://api-global.netflix.com/${abTestInformation.urlPrefix}/queue`, {
-										success: (queueMessage) => {
-											queueList = queueMessage.list;
+									success: (queueMessage) => {
+										queueList = queueMessage.list;
 
-											configDone = true;
-											tryToDisplayOutput();
-										},
-										error: errorHandler
-									});
-								} else {
-									configDone = true;
-									tryToDisplayOutput();
-								}
+										configDone = true;
+										tryToDisplayOutput();
+									},
+									error: errorHandler
+								});
+							} else {
+								configDone = true;
+								tryToDisplayOutput();
 							}
-						},
-						error: errorHandler
-					}
-				);
-				// Retrieve the movie list
-				$.getJSON(`http://api-global.netflix.com/${abTestInformation.urlPrefix}/movieLists`, {
-					success: (movieListMessage) => {
-						movieLists = movieListMessage.list;
-						tryToDisplayOutput();
+						}
 					},
 					error: errorHandler
-				});
-			},
-			error: errorHandler
-		});
-	}
+				}
+			);
+			// Retrieve the movie list
+			$.getJSON(`http://api-global.netflix.com/${abTestInformation.urlPrefix}/movieLists`, {
+				success: (movieListMessage) => {
+					movieLists = movieListMessage.list;
+					tryToDisplayOutput();
+				},
+				error: errorHandler
+			});
+		},
+		error: errorHandler
+	});
+}
 /* Conclusion:
 It's fair to say that sequencing HTTP requests with callbacks is very hard. In order to perform two tasks in parallel, we have to introduce a variable to track the status of each task. Every time one of the parallel tasks completes it must check whether its sibling task has also completed. If both have completed, only then can we move forward. In the example above, every time a task is finished the tryToDisplayOutput() function is called to check if the program was ready to display output. This function checks the status of all tasks and displays the output if possible.
 
@@ -1420,3 +1420,143 @@ With a callback-based API, asynchronous error handling is also very complicated.
 
 The Observable interface is a much more powerful way of working with asynchronous APIs than callbacks. We'll see that Observables can free us from having to track the status of tasks that are run in parallel, just as Observables free us from having to track Event Subscriptions. We'll also see that Observable gives us the same error propagation semantics in asynchronous programs that we expect in synchronous programs. Finally we'll learn that by converting callback-based APIs to Observables, we can query them along with Events to build much more expressive programs.
 */
+//-----------------------------------------------------------------------------
+/*
+Exercise 36: Traversing callback-based Asynchronous APIs
+
+If a callback API were a sequence, what kind of sequence would it be? We've seen that UI Event sequences can contain anywhere from 0 to infinite items, but will never complete on their own.
+
+```js
+
+mouseMoves === seq([ {x: 23, y: 55},,,,,,,{x: 44, y: 99},,,{x:55,y:99},,,{x: 54, y:543},,, ]);
+
+```
+
+In contrast, if we were to convert output from the $.getJSON() function we've been using into a sequence it would always return a sequence that completes after sending a single item.
+
+```js
+
+getJSONAsObservable("http://api-global.netflix.com/abTestInformation") ===
+seq([ { urlPrefix: "billboardTest" } ])
+
+```js
+
+It might seem strange to create sequences that contain only one object. We could introduce an Observable-like type specifically for scalar values, but that would make callback-based APIs more difficult to query with Events. Thankfully, an Observable sequence is flexible enough to model both.
+
+So how do we convert a callback API into an Observable sequence? Unfortunately, because callback-based APIs vary so much in their interfaces, we can't create a conversion function like we did with fromEvent(). However there is a more flexible function we can use to build Observable sequences...
+
+Observable.create() is powerful enough to convert any asynchronous API into an Observable. Observable.create() relies on the fact that all asynchronous APIs have the following semantics:
+
+1. The client needs to be able to receive data.
+2. The client needs to be able to receive error information.
+3. The client needs to be able to be alerted that the operation is complete.
+4. The client needs to be able to indicate that they're no longer interested in the result of the operation.
+
+In the following example, we'll use the Observable.create() function to create an Observable that issues a request to getJSON when it's traversed.
+*/
+function exc36(window, $) {
+	var getJSON = (url) => {
+		return Observable.create((observer) => {
+			var subscribed = true;
+			$.getJSON(url, {
+				success(data) => {
+					// If client is still interested in the results, send them.
+					if (subscribed) {
+						// Send data to the client
+						observer.next(data);
+						// Immediately complete the sequence
+						observer.complete();
+					}
+				},
+				error(ex) => {
+					// If client is still interested in the results, send them.
+					if (subscribed) {
+						// Inform the client that an error occurred.
+						observer.error(ex);
+					}
+				}
+			});
+
+			// Definition of the Subscription objects unsubscribe (dispose in RxJS 4) method.
+			return () => {
+				subscribed = false;
+			}
+		});
+	};
+
+	var observer = {
+		// onNext in RxJS 4
+		next(data) => alert(JSON.stringify(data)),
+		// onError in RxJS 4
+		error(err) => alert(err),
+		// onComplete in RxJS 4
+		complete() => alert("The asynchronous operation has completed.")
+	};
+
+	var subscription = getJSON("http://api-global.netflix.com/abTestInformation")
+	.subscribe(observer);
+
+	// setTimeout(function () {
+	// 	alert("Changed my mind, I do not want notifications any more!")
+	// 	subscription.unsubscribe();
+	// }, 10);
+}
+/* Conclusion
+The argument passed into Observable.create() above is known as the subscribe function. Things that might be interested in data that the created Observable might produce (i.e. an Observer) can express this intention by subscribing to it. They must conform to the interface of an Observer in order for notifications pushed by the Observable to be delivered. Observers are then passed as an argument into the subscribe function of the created Observable.
+
+Take note that the subscribe function defined for an Observable represents a lazy evaluation that only occurs for each Observer when it subscribes. Once an Observer no longer interested in the data an Observable has to provide, it should unsubscribe itself. The return value of calling subscribe on an Observable with some Observer is a Subscription, which represents a disposable resource. Calling unsubscribe on a Subscription object will clean up the Observable execution for the corresponding Observer.
+
+Notice that the Observer above defines three methods:
+
+* next(), used by Observables to deliver new data
+* error(), used by Observables to deliver error information
+* complete(), used by Observables to indicate a data sequence has completed
+Observers are not expected to implement all the methods above (i.e. they may be partial). For callbacks that are not provided, Observable execution still proceeds normally, except some types of notifications will be ignored.
+
+Between RxJS 4 and 5, there are some slight API differences to be wary of that relate to the discussion here. Please consult this migration guide for a detailed list of changes.
+
+Now that we've built a version of the getJSON function that returns an Observable sequence, let's use it to improve our solution to the previous exercise...
+*/
+//-----------------------------------------------------------------------------
+/*
+Exercise 37: Sequencing HTTP requests with Observable
+
+Let's use the getJSON function that returns Observables, and the Observable.fromEvent() to complete the exercise we completed earlier.
+*/
+function exc37(window, getJSON, showMovieLists, showError) {
+	var movieListsSequence = Observable.zip(
+		// 1st arg in the 1st Observable.zip fn
+		getJSON("http://api-global.netflix.com/abTestInformation")
+		.concatMap((abTestInformation) => Observable.zip(
+			// 1st arg in the 2nd Observable.zip fn
+			getJSON(`http://api-global.netflix.com/${abTestInformation.urlPrefix}/config`)
+			.concatMap((config) => {
+				if (config.showInstantQueue) {
+					return getJSON(`http://api-global.netflix.com/${abTestInformation.urlPrefix}/queue`)
+					// the resulting array for the 1st arg in the 2nd Observable.zip fn.
+					.map((queueMessage) => queueMessage.list);
+				} else {
+					return Observable.returnValue(undefined);
+				}
+			}),
+			// 2nd arg in the 2nd Observable.zip fn. [returns an array]
+			getJSON(`http://api-global.netflix.com/${abTestInformation.urlPrefix}/movieLists`),
+			// the 3rd arg in the 2nd Observable.zip fn [returns an array]
+			(queueList, movieListsMessage) => {
+				var copyOfMovieLists = Object.create(movieListsMessage.list);
+				if (queueList !== undefined) {
+					copyOfMovieLists.push(queueList);
+				}
+				return copyOfMovieLists;
+			}
+		);
+	}),
+	// second argument in the Observable.zip function
+	Observable.fromEvent(window, "load"),
+	// returns results of the two zipped arrays...
+	(movieLists, loadEvent) => movieLists);
+
+movieListsSequence.forEach((movieLists) =>
+showMovieLists(movieLists),
+(err) => showError(err));
+}
