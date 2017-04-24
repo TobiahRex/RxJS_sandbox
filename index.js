@@ -1556,7 +1556,24 @@ function exc37(window, getJSON, showMovieLists, showError) {
 	// returns results of the two zipped arrays...
 	(movieLists, loadEvent) => movieLists);
 
-movieListsSequence.forEach((movieLists) =>
-showMovieLists(movieLists),
-(err) => showError(err));
+	movieListsSequence.forEach((movieLists) =>
+	// there's only going to be one value in the array of "movieLists" since there is only one moment when window.load event is fired.
+	showMovieLists(movieLists),
+	(err) => showError(err));
+}
+/* Conclusion
+Almost every workflow in a web application starts with an event, continues with an HTTP request, and results in a state change. Now we know how to express the first two tasks elegantly.
+*/
+//-----------------------------------------------------------------------------
+/*
+Exercise 38: Throttle Input
+
+When dealing with user input, there will be times when the user's input is too noisy, and will potentially clog your servers with extraneous requests. We want the ability to throttle the users's input so that if they interacting for one second, then we will get the user input. Let's say for example, the user clicks a button once too many times upon saving and we only want to fire after they've stopped for a second.
+
+seq([1,2,3,,,,,,,4,5,6,,,]).throttleTime(1000 ms) === seq([,,,,,,,3,,,,,,,,,,6,,,]);
+*/
+function exc38(clicks, saveData, name) {
+	return clicks
+				.throttleTime(1000)
+				.concatMap(() => saveData(name))
 }
